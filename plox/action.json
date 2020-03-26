@@ -1,0 +1,89 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "JSON schema for a Plox Action yaml file",
+  "type": "object",
+  "allOf": [
+    {
+      "$ref": "#/definitions/Action"
+    }
+  ],
+  "definitions": {
+    "Action": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the action.\nE.g.: \"template\", \"copy\" or \"npm-install-package\""
+        },
+        "description": {
+          "type": "string",
+          "description": "A text that briefly describes what the action does.\nE.g.: \"Installs an npm package\""
+        },
+        "requirements": {
+          "type": "string",
+          "description": "A javascript expression used to determine if the requirements for this\naction have been met.\nE.g.: Some actions might require a git repository or a package.json file.",
+          "default": "true"
+        },
+        "inputs": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/Input"
+          },
+          "description": "A pojo of inputs; values the action can use to change its behavior.\nE.g.: The \"npm-install-package\" action has inputs for \"dependencies\" and \"devDependencies\".",
+          "default": {}
+        }
+      },
+      "required": ["name", "description"],
+      "additionalProperties": false,
+      "description": "A Plox Action, the most low level concept from all Plox concepts."
+    },
+    "Input": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string",
+          "description": "A short term"
+        },
+        "type": {
+          "$ref": "#/definitions/InputType"
+        },
+        "default": {
+          "$ref": "#/definitions/InputPrimitive"
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "long_name": {
+          "type": "string"
+        }
+      },
+      "required": ["description", "type"],
+      "additionalProperties": false,
+      "description": "An object describing an input for the Action,\ninputs can be used to alter the Actions behaviour.\nE.g.: The \"npm-install-package\" Action has the \"dependencies\" and \"devDependencies\"."
+    },
+    "InputType": {
+      "type": "string",
+      "enum": ["string", "boolean", "number", "object", "array"]
+    },
+    "InputPrimitive": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "object"
+        },
+        {
+          "type": "array",
+          "items": {}
+        }
+      ]
+    }
+  }
+}
